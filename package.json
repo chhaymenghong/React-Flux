@@ -16,10 +16,14 @@
     "url": "https://github.com/chhaymenghong/React-Flux/issues"
   },
   "homepage": "https://github.com/chhaymenghong/React-Flux#readme",
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1"
+  },
   "devDependencies": {
     "browserify": "^14.4.0",
     "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.0.0",
     "gulp-open": "^2.0.0",
     "reactify": "^1.1.1",
