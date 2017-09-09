@@ -4,6 +4,7 @@ var open = require('gulp-open');
 var browserify = require('browserify');
 var reactify = require('reactify');
 var source = require('vinyl-source-stream');
+var cssConcat = require('gulp-concat');
 
 var config = {
     baseUrl: 'http://localhost',
@@ -11,6 +12,10 @@ var config = {
     resources: {
         html: './src/*.html',
         js: './src/**/*.js',
+        css: [
+            'node_modules/bootstrap/dist/css/bootstrap.css',
+            'node_modules/bootstrap/dist/css/bootstrap-theme.css'
+        ],
         entryJs: './src/index.js'
     }
 };
@@ -59,7 +64,12 @@ gulp.task('js', function() {
         .pipe(webServer.reload());
 });
 
+gulp.task('css', function() {
+    gulp.src(config.resources.css)
+        .pipe(cssConcat('bundle.css'))
+        .pipe(gulp.dest('dist' + '/css'));
+});
 
 
 // need a default task
-gulp.task('default', ['html', 'js', 'openBrowser', 'watch']);
+gulp.task('default', ['html', 'js', 'css', 'openBrowser', 'watch']);
