@@ -1,12 +1,17 @@
 var gulp = require('gulp');
 var webServer = require('gulp-connect');
 var open = require('gulp-open');
+var browserify = require('browserify');
+var reactify = require('reactify');
+var source = require('vinyl-source-stream');
 
 var config = {
     baseUrl: 'http://localhost',
     port: 5000,
     resources: {
-        html: './src/*.html'
+        html: './src/*.html',
+        js: './src/**/*.js',
+        entryJs: './src/index.js'
     }
 };
 
@@ -33,14 +38,28 @@ gulp.task('openBrowser', ['webServer'], function () {
 // Watch task
 gulp.task('watch', function() {
     gulp.watch([config.resources.html], ['html']);
+    gulp.watch([config.resources.js], ['js']);
 });
 
-// need a task that save *html files to dist folder
+// Task that save *html files to dist folder
 gulp.task('html', function() {
     gulp.src(config.resources.html)
         .pipe(gulp.dest('./dist'))
         .pipe(webServer.reload());
 });
 
+// Task that handle js files
+gulp.task('js', function() {
+    browserify(config.resources.entryJs)
+        .transform(reactify) // pipe all js files through reactify to transform all jsx to js
+        .bundle() // bundle
+        .on('error', console.error.bind(console))
+        .pipe(source('bundle.js')) //turn readable stream from browserify into virtual file format that gulp can understand
+        .pipe(gulp.dest('dist' + '/scripts'))
+        .pipe(webServer.reload());
+});
+
+
+
 // need a default task
-gulp.task('default', ['html', 'openBrowser', 'watch']);
+gulp.task('default', ['html', 'js', 'openBrowser', 'watch']);
